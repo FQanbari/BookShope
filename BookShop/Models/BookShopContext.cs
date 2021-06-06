@@ -82,25 +82,25 @@ namespace BookShop.Models
 
             modelBuilder.Entity<Translator>().ToTable("Translator");
             modelBuilder.Entity<Translator>().HasKey(o => o.Id);
-            modelBuilder.Entity<Translator>().Property(p => p.FirsName).HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Translator>().Property(p => p.FirstName).HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Translator>().Property(p => p.LastName).HasMaxLength(100).IsRequired();
 
         }
 
-        DbSet<Book> Books { get; set; }
-        DbSet<Category> Categories { get; set; }
-        DbSet<Order> Orders { get; set; }
-        DbSet<Author> Authors { get; set; }
-        DbSet<City> Cities { get; set; }
-        DbSet<Provice> Provices { get; set; }
-        DbSet<AuthorBook> Author_Books { get; set; }
-        DbSet<OrderBook> Order_Books { get; set; }
-        DbSet<Language> Languages { get; set; }
-        DbSet<Discount> Discounts { get; set; }
-        DbSet<OrderStatus> OrderStatuses { get; set; }
-        DbSet<Customer> Customers { get; set; }
-        DbSet<Publisher> Publisher { get; set; }
-        DbSet<BookTranslator> BookTranslator { get; set; }
-        DbSet<Translator> Translator { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Provice> Provices { get; set; }
+        public DbSet<AuthorBook> Author_Books { get; set; }
+        public DbSet<OrderBook> Order_Books { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Publisher> Publisher { get; set; }
+        public DbSet<BookTranslator> BookTranslator { get; set; }
+        public DbSet<Translator> Translator { get; set; }
     }
 }
