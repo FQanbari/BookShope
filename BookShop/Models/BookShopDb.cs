@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,19 +8,24 @@ namespace BookShop.Models
 {
     public class Book
     {
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
         public string Summary { get; set; }
         public int Price { get; set; }
         public int Stock { get; set; }
+        public int NumOfPages { get; set; }
         public string File { get; set; }
         public byte[] Image { get; set; }
         public string ISBN { get; set; }
-        public int CategoryId { get; set; }
+        public bool? IsPublish { get; set; }
+        public DateTime? PublishDate { get; set; }
+        public int PublishYear { get; set; }
         public int LanguageId { get; set; }
         public int PublisherId { get; set; }
+        public bool? IsDelete { get; set; }
 
-        public Category Category { get; set; }
+        public List<BookCategory> BookCategories { get; set; }
         public Language Language { get; set; }
         public Discount Discount { get; set; }
         public Publisher Publisher { get; set; }
@@ -28,15 +34,23 @@ namespace BookShop.Models
         public List<BookTranslator> bookTranlators { get; set; }
     }
 
+    public class BookCategory
+    {
+        public int BookId { get; set; }
+        public int CategoryId { get; set; }
+
+        public Book Book { get; set; }
+        public Category Category { get; set; }
+    }
     public class Category
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int? ParentCategoryId { get; set; }
 
-        public List<Category> Categories { get; set; }
-        public List<Book> Books { get; set; }
+        public List<BookCategory> BookCategories { get; set; }
         public Category category { get; set; }
-        public Publisher Publisher { get; set; }
+        public List<Category> Categories { get; set; }
     }
 
     public class Language

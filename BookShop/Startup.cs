@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookShop.Classes;
 using BookShop.Models;
+using BookShop.Models.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
+using ReflectionIT.Mvc.Paging;
 
 namespace BookShop
 {
@@ -27,6 +31,20 @@ namespace BookShop
         {
             services.AddControllersWithViews();
             services.AddDbContext<BookShopContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging());
+            services.AddTransient<BooksRepository>();
+            services.AddMvc(options =>
+            {
+                options.MaxModelValidationErrors = 50;
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+                    _ => "The field is required");
+            });
+            services.AddTransient<ConvertDate>();
+
+            services.AddPaging(options => {
+                options.ViewName = "Bootstrap4";
+                options.HtmlIndicatorDown = "<i class='fa fa-sort-amount-down'></i>";
+                options.HtmlIndicatorUp = "<i class='fa fa-sort-amount-up'></i>";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

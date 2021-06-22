@@ -1,0 +1,126 @@
+﻿@model IEnumerable<BookShop.Models.ViewModel.BookIndexViewModel>
+@inject BookShop.Classes.ConvertDate convertDate
+
+@{
+    ViewData["Title"] = "AdvancedSearch";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                Advanced search results
+                <a href="/Admin/Book/Index" class="float-left"><i class="fa fa-arrow-circle-left"></i>  بازگشت به لیست کتاب ها   </a>
+            </div>
+            <div class="card-body">               
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>row</th>
+                                <th>Title</th>
+                                <th>Authors</th>
+                                <th>Translator</th>
+                                <th>Language</th>
+                                <th>Category</th>
+                                <th>ISBN</th>
+                                <th>Stock</th>
+                                <th>Publisher Name</th>
+                                <th class="text-center">Price $</th>
+                                <th class="text-center">PublishDate</th>
+                                <th style="width:25px;">status</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Title</td>
+                                <td class="text-nowrap">
+                                    @{var last = item.Authors.Last(); }
+                                    @foreach (var a in item.Authors)
+                                    {
+                                        if (a.Equals(last))
+                                        {
+                                            <span>@a </span>
+                                        }
+                                        else
+                                        {
+                                            <span>@a - </span>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-nowrap">
+                                    @{var lastTranslator = item.Translators.Last(); }
+                                    @foreach (var a in item.Translators)
+                                    {
+                                        if (a.Equals(lastTranslator))
+                                        {
+                                            <span>@a </span>
+                                        }
+                                        else
+                                        {
+                                            <span>@a - </span>
+                                        }
+                                    }
+                                </td>
+                                <td>@item.Language</td>
+                                <td class="text-nowrap">
+                                    @{var lastCategory = item.Categories.Last(); }
+                                    @foreach (var a in item.Categories)
+                                    {
+                                        if (a.Equals(lastCategory))
+                                        {
+                                            <span>@a </span>
+                                        }
+                                        else
+                                        {
+                                            <span>@a - </span>
+                                        }
+                                    }
+                                </td>
+                                <td>@item.ISBN</td>
+                                <td>@item.Stock</td>
+                                <td>@item.PublisherName</td>
+                                <td class="text-center">@item.Price</td>
+                                <td class="text-center">
+                                    @if (item.PublishDate != null)
+                                    {
+                                        <span>@convertDate.MiladiToShamsi(item.PublishDate.Value)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                @if (item.IsPublish == true)
+                                {
+                                    <td class="text-center">
+                                        <label class="badge badge-success btn-block">Published</label>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center">
+                                        <label class="badge badge-info btn-block">Draft</label>
+                                    </td>
+                                }
+                                <td class="text-center">
+                                    <a class="btn btn-info btn-icon"><i class="fa fa-eye text-white"></i></a>
+                                    <a class="btn btn-success btn-icon"><i class="fa fa-edit text-white"></i></a>
+                                    <a class="btn btn-danger btn-icon"><i class="fa fa-trash text-white"></i></a>
+                                </td>
+                            </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

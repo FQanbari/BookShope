@@ -27,9 +27,22 @@ namespace BookShop.Models
 
             modelBuilder.ApplyConfiguration(new CategoryMap());
 
+            modelBuilder.Entity<BookCategory>().ToTable("BookCategory");
+            modelBuilder.Entity<BookCategory>().HasKey(bc => new { bc.BookId, bc.CategoryId });
+            modelBuilder.Entity<BookCategory>().Property(bc => bc.CategoryId).IsRequired();
+            modelBuilder.Entity<BookCategory>().Property(bc => bc.BookId).IsRequired();
+            modelBuilder.Entity<BookCategory>().HasOne(bc => bc.Book).WithMany(bc => bc.BookCategories).HasForeignKey(bc => bc.BookId);
+            modelBuilder.Entity<BookCategory>().HasOne(bc => bc.Category).WithMany(bc => bc.BookCategories).HasForeignKey(bc => bc.CategoryId);
+
             modelBuilder.Entity<Language>().ToTable("Language");
             modelBuilder.Entity<Language>().HasKey(l => l.Id);
             modelBuilder.Entity<Language>().Property(l => l.Name).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Language>().HasData(
+                new Language { Id = 1, Name = "Persion"},
+                new Language { Id = 2, Name = "Arabic"},
+                new Language { Id = 3, Name = "Spanich"},
+                new Language { Id = 4, Name = "English"}
+                );
 
             modelBuilder.Entity<Discount>().ToTable("Discount");
             modelBuilder.Entity<Discount>().HasKey(d => d.BookId);
@@ -37,14 +50,18 @@ namespace BookShop.Models
 
             modelBuilder.Entity<Author>().ToTable("Author");
             modelBuilder.Entity<Author>().HasKey(a => a.Id);
-            modelBuilder.Entity<Author>().Property(a => a.FirstName).IsRequired().HasMaxLength(100);
-            modelBuilder.Entity<Author>().Property(a => a.LastName).IsRequired().HasMaxLength(100);
+            modelBuilder.Entity<Author>().Property(a => a.FirstName).HasMaxLength(100);
+            modelBuilder.Entity<Author>().Property(a => a.LastName).HasMaxLength(100);
+            modelBuilder.Entity<Author>().HasData(
+                new Author { Id = 1, FirstName = "A.J" , LastName = "Hock" },
+                new Author { Id = 2, FirstName = "Jack" , LastName = "Simon" },
+                new Author { Id = 3, FirstName = "Sara" , LastName = "Rice" },
+                new Author { Id = 4, FirstName = "Barbara" , LastName = "Okley" }
+                );
 
             modelBuilder.Entity<AuthorBook>().ToTable("AuthorBook");
             modelBuilder.Entity<AuthorBook>().HasKey(ab => new { ab.BookId, ab.AuthorId });
-            modelBuilder.Entity<AuthorBook>().Property(ab => ab.AuthorId).IsRequired();
-            modelBuilder.Entity<AuthorBook>().Property(ab => ab.BookId).IsRequired();
-            modelBuilder.Entity<AuthorBook>().HasOne(ab => ab.Book).WithMany(ab => ab.AuthorBooks).HasForeignKey(ab => ab.BookId);
+            modelBuilder.Entity<AuthorBook>().HasOne(ab => ab.Book).WithMany(ab => ab.AuthorBooks).HasForeignKey(ab => ab.BookId); 
             modelBuilder.Entity<AuthorBook>().HasOne(ab => ab.Author).WithMany(ab => ab.AuthorBooks).HasForeignKey(ab => ab.AuthorId);
 
             modelBuilder.ApplyConfiguration(new CustomerMap());
@@ -74,6 +91,11 @@ namespace BookShop.Models
             modelBuilder.Entity<Publisher>().ToTable("Publisher");
             modelBuilder.Entity<Publisher>().HasKey(p => p.Id);
             modelBuilder.Entity<Publisher>().Property(p => p.Name).HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Publisher>().HasData(
+                new Publisher { Id = 1, Name = "Pskr"},
+                new Publisher { Id = 2, Name = "Amazon"},
+                new Publisher { Id = 3, Name = "Rayan"}
+                );
 
             modelBuilder.Entity<BookTranslator>().ToTable("BookTranslator");
             modelBuilder.Entity<BookTranslator>().HasKey(a => new { a.BookId, a.TranslatorId });
@@ -84,6 +106,12 @@ namespace BookShop.Models
             modelBuilder.Entity<Translator>().HasKey(o => o.Id);
             modelBuilder.Entity<Translator>().Property(p => p.FirstName).HasMaxLength(100).IsRequired();
             modelBuilder.Entity<Translator>().Property(p => p.LastName).HasMaxLength(100).IsRequired();
+            modelBuilder.Entity<Translator>().HasData(
+                new Translator { Id = 1, FirstName = "Adam", LastName = "Hock" },
+                new Translator { Id = 2, FirstName = "Jack" , LastName = "kidman" },
+                new Translator { Id = 3, FirstName = "Sara" , LastName = "Delbargo" },
+                new Translator { Id = 4, FirstName = "Jim" , LastName = "Okley" }
+                );
 
         }
 
@@ -93,8 +121,8 @@ namespace BookShop.Models
         public DbSet<Author> Authors { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Provice> Provices { get; set; }
-        public DbSet<AuthorBook> Author_Books { get; set; }
-        public DbSet<OrderBook> Order_Books { get; set; }
+        public DbSet<AuthorBook> AuthorBooks { get; set; }
+        public DbSet<OrderBook> OrderBooks { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
@@ -102,5 +130,6 @@ namespace BookShop.Models
         public DbSet<Publisher> Publisher { get; set; }
         public DbSet<BookTranslator> BookTranslator { get; set; }
         public DbSet<Translator> Translator { get; set; }
+        public DbSet<BookCategory> BookCategories { get; set; }
     }
 }

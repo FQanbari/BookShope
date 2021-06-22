@@ -1,0 +1,156 @@
+﻿@model BookShop.Models.Book
+@inject BookShop.Classes.ConvertDate convertDate
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+
+<div class="row" style=" direction: rtl; text-align: left;">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h2>Details @Model.Title</h2> 
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="~/images/Book.png" height="250" />
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Title : @Model.Title</p>
+                                <p>ISBN : @Model.ISBN</p>
+                                <p>Publish Year : @Model.PublishYear</p>
+                                <p>Price : @Model.Price</p>
+                                <p>Stock : @Model.Stock</p>
+                                <p>Num Of Pages : @Model.NumOfPages</p>
+                                <p>Language : @Model.Language.Name</p>
+                            </div>
+                            <div class="col-md-6">
+
+                                <p>Publisher : @Model.Publisher.Name</p>
+                                <p>
+                                    Authors :
+                                    @{string Authors = "";}
+                                    @foreach (var item in ViewBag.Authors as List<BookShop.Models.Author>)
+                                    {
+                                        if (Authors != "")
+                                        {
+                                            Authors = Authors + " - " + item.FirstName + " " + item.LastName;
+                                        }
+                                        else
+                                        {
+                                            Authors = item.FirstName + " " + item.LastName;
+                                        }
+                                    }
+
+                                    @Authors
+                                </p>
+                                <p>
+                                    Translators :
+                                    @{var TranslatorsList = ViewBag.Translators as List<BookShop.Models.Translator>;}
+                                    @if (TranslatorsList.Count() != 0)
+                                    {
+
+                                        string Translators = "";
+                                        @foreach (var item in TranslatorsList)
+                                        {
+                                            if (Translators != "")
+                                            {
+                                                Translators = Translators + " - " + item.FirstName + " " + item.LastName;
+                                            }
+                                            else
+                                            {
+                                                Translators = item.FirstName + " " + item.LastName;
+                                            }
+                                        }
+
+                                        @Translators
+                                    }
+
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+
+                                </p>
+                                <p>
+                                    Categories :
+                                    @{ var CategoriesList = ViewBag.Categories as List<BookShop.Models.Category>;}
+                                    @if (CategoriesList.Count() != 0)
+                                    {
+                                        string Categories = "";
+                                        @foreach (var item in CategoriesList)
+                                        {
+                                            if (Categories != "")
+                                            {
+                                                Categories = Categories + " - " + item.Name;
+                                            }
+                                            else
+                                            {
+                                                Categories = item.Name;
+                                            }
+                                        }
+
+                                        @Categories
+                                    }
+
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+
+                                </p>
+                                <p>
+                                    Publish Date :
+                                    @if (Model.PublishDate != null)
+                                    {
+                                        @convertDate.MiladiToShamsi((DateTime)Model.PublishDate, "yyyy/MM/dd")
+                                    }
+
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </p>
+                                <p>
+                                    Status :
+                                    @if (Model.IsPublish == true)
+                                    {
+                                        <span>Published</span>
+                                    }
+
+                                    else
+                                    {
+                                        <span>Draft</span>
+                                    }
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12">
+                        <hr />
+                        <p>
+                            Summary : @Model.Summary
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

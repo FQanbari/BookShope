@@ -1,0 +1,212 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<BookShop.Models.ViewModel.BookIndexViewModel>
+@using System.Collections.Generic;
+@inject BookShop.Classes.ConvertDate convertDate;
+@using ReflectionIT.Mvc.Paging
+@addTagHelper*,ReflectionIT.Mvc.Paging
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                Book List
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                                </span>
+                                <input id="input-group-1" name="title" class="form-control" placeholder="Search Book ..." type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row form-group">
+                                <label class="ml-2">Row</label>
+                                <div class="col-md-4 padding-0px">
+                                    <select class="select2" name="row" asp-items="@ViewBag.RowID"></select>
+                                </div>
+                                <div class="col-md-3 padding-0px">
+                                    <input type="submit" value="Show me" class="btn btn-primary float-left" />
+                                </div>
+                            </div>
+                        </div>
+                        @if (ViewBag.Search != "")
+                        {
+                            <div class="col-md-4">
+                                <a href="/Admin/Book/Index" class="float-left"><i class="fa fa-arrow-circle-left"></i>  بازگشت به لیست کتاب ها   </a>
+                            </div>
+                        }
+                    </div>
+                </form>
+                <p>
+                    <a class="btn btn-primary btn-block" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Advanced book search
+                    </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        <form asp-action="AdvancedSearch">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Title</label>
+                                        <input class="form-control" name="Title" placeholder="Title">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">ISBN</label>
+                                        <input class="form-control" name="ISBN" placeholder="ISBN">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Language</label>
+                                        <select class="select2 js-states form-control" name="LanguageId" asp-items="ViewBag.LanguageId" >
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Category</label>
+                                        <input type="text" id="justAnotherInputBox" name="CategoryName" placeholder="Select Category..." />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Author</label>
+                                        <select class="select2 js-states form-control" name="AuthorId" asp-items="ViewBag.AuthorId" >
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Translator</label>
+                                        <select class="select2 js-states form-control" name="TranslatorId" asp-items="ViewBag.TranslatorId" >
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Publisher</label>
+                                        <select class="select2 js-states form-control" name="PublisherId" asp-items="ViewBag.PublisherId" >
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="submit" value="Search" class="btn btn-success float-left" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>row</th>
+                                <th>
+                                    @Html.SortableHeaderFor(model => model.Title, "Title")
+                                </th>
+                                <th>@Html.SortableHeaderFor(model => model.Authors, "Author")</th>
+                                <th>@Html.SortableHeaderFor(model => model.ISBN, "ISBN")</th>
+                                <th>@Html.SortableHeaderFor(model => model.Stock, "Stock")</th>
+                                <th>@Html.SortableHeaderFor(model => model.PublisherName, "PublisherName")</th>
+                                <th class="text-center">@Html.SortableHeaderFor(model => model.Price, "Price") $</th>
+                                <th class="text-center">@Html.SortableHeaderFor(model => model.PublishDate, "PublishDate")</th>
+                                <th style="width:25px;">@Html.SortableHeaderFor(model => model.IsPublish, "IsPublish")</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = ViewBag.NumOfRow;}
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@i</td>
+                                    <td class="text-nowrap">@item.Title</td>
+                                    <td class="text-nowrap">
+                                        @{var last = item.Authors.Last(); }
+                                        @foreach (var a in item.Authors)
+                                        {
+                                            if (a.Equals(last))
+                                            {
+                                                <span>@a </span>
+                                            }
+                                            else
+                                            {
+                                                <span>@a - </span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@item.ISBN</td>
+                                    <td>@item.Stock</td>
+                                    <td>@item.PublisherName</td>
+                                    <td class="text-center">@item.Price</td>
+                                    <td class="text-center">
+                                        @if (item.PublishDate != null)
+                                        {
+                                            <span>@convertDate.MiladiToShamsi(item.PublishDate.Value)</span>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                    @if (item.IsPublish == true)
+                                    {
+                                        <td class="text-center">
+                                            <label class="badge badge-success btn-block">Published</label>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center">
+                                            <label class="badge badge-info btn-block">Draft</label>
+                                        </td>
+                                    }
+                                    <td class="text-center">
+                                        <a href="/Admin/Book/Details/@item.Id" class="btn btn-info btn-icon"><i class="fa fa-eye text-white"></i></a>
+                                        <a class="btn btn-success btn-icon"><i class="fa fa-edit text-white"></i></a>
+                                        <a class="btn btn-danger btn-icon"><i class="fa fa-trash text-white"></i></a>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                    <nav>
+                        @await this.Component.InvokeAsync("Pager", new { PagingList = this.Model })
+                    </nav>
+                    @*<nav>
+                <vc:pager paging-list="@Model"></vc:pager>
+            </nav>*@                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var SampleJSONData = @Html.Raw(Json.Serialize(ViewBag.Categories));
+    var comboTree2;
+    
+jQuery(document).ready(function($) {
+		comboTree2 = $('#justAnotherInputBox').comboTree({
+			source : SampleJSONData,
+			isMultiple: false
+		});
+});</script>
